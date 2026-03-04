@@ -54,7 +54,7 @@ If a `.golangci.yml` configuration file is present at the root, golangci-lint wi
 - Attribute key constants should be typed as `attribute.Key` (from `go.opentelemetry.io/otel/attribute`).
 - Use `const` blocks for groups of related attribute keys.
 - Keep package names lowercase and matching their semantic convention namespace.
-- Do not introduce dependencies outside of the OpenTelemetry Go SDK and the Go standard library unless absolutely necessary.
+- Prefer dependencies from the Go standard library and the OpenTelemetry Go API (`go.opentelemetry.io/otel/...`). Avoid adding `go.opentelemetry.io/otel/sdk` or other external dependencies unless absolutely necessary.
 
 ## CI / Validation
 
