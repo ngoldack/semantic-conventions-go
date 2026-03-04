@@ -1,12 +1,12 @@
 // Package semconv provides OpenInference semantic conventions for tracing.
 //
-// These conventions define the attribute keys used to annotate spans produced
-// by LLM applications, agents, and related systems that follow the OpenInference
-// specification. See https://arize-ai.github.io/openinference/spec/semantic_conventions.html
-// for the full specification.
+// These conventions define the attribute keys and well-known values used to
+// annotate spans produced by LLM applications, agents, and related systems
+// following the OpenInference specification:
+// https://arize-ai.github.io/openinference/spec/semantic_conventions.html
 package semconv
 
-// Input span attributes.
+// Input span attribute keys.
 const (
 	// InputValue is the input value for any span.
 	InputValue = "input.value"
@@ -15,7 +15,7 @@ const (
 	InputMimeType = "input.mime_type"
 )
 
-// Output span attributes.
+// Output span attribute keys.
 const (
 	// OutputValue is the output value for any span.
 	OutputValue = "output.value"
@@ -24,28 +24,33 @@ const (
 	OutputMimeType = "output.mime_type"
 )
 
-// LLM span attributes.
+// LLM span attribute keys.
 const (
-	// LLMInputMessages is the list of messages sent to the LLM (e.g. OpenAI chat completions).
+	// LLMInputMessages is the list of messages sent to the LLM (chat completions API).
 	LLMInputMessages = "llm.input_messages"
 
 	// LLMOutputMessages is the list of messages received from the LLM.
 	LLMOutputMessages = "llm.output_messages"
 
-	// LLMModelName is the name of the LLM model.
+	// LLMModelName is the name of the language model.
 	LLMModelName = "llm.model_name"
 
-	// LLMPrompts is the list of prompts sent to the LLM (legacy completions API).
+	// LLMPrompts is the list of prompts sent to the completions API (legacy).
 	LLMPrompts = "llm.prompts"
+
+	// LLMChoices is the list of text choices returned from the completions API (legacy).
+	LLMChoices = "llm.choices"
 
 	// LLMInvocationParameters is the JSON representation of parameters passed to the LLM.
 	LLMInvocationParameters = "llm.invocation_parameters"
 
-	// LLMProvider is the provider of the inferences (e.g. the cloud provider).
-	LLMProvider = "llm.provider"
+	// LLMProviderKey is the attribute key for the hosting provider of the LLM (e.g. "azure").
+	// Use [LLMProvider] values for well-known providers.
+	LLMProviderKey = "llm.provider"
 
-	// LLMSystem is the AI product as identified by the client or server.
-	LLMSystem = "llm.system"
+	// LLMSystemKey is the attribute key for the AI product as identified by the client or server.
+	// Use [LLMSystem] values for well-known systems.
+	LLMSystemKey = "llm.system"
 
 	// LLMFunctionCall is the JSON representation of a function call made by the LLM.
 	LLMFunctionCall = "llm.function_call"
@@ -54,7 +59,7 @@ const (
 	LLMTools = "llm.tools"
 )
 
-// LLM token count attributes.
+// LLM token count attribute keys.
 const (
 	// LLMTokenCountPrompt is the number of tokens in the prompt.
 	LLMTokenCountPrompt = "llm.token_count.prompt"
@@ -62,10 +67,10 @@ const (
 	// LLMTokenCountCompletion is the number of tokens in the completion.
 	LLMTokenCountCompletion = "llm.token_count.completion"
 
-	// LLMTokenCountTotal is the total number of tokens used in the transaction.
+	// LLMTokenCountTotal is the total number of tokens used.
 	LLMTokenCountTotal = "llm.token_count.total"
 
-	// LLMTokenCountPromptDetails is the key prefix for additional prompt token count details.
+	// LLMTokenCountPromptDetails is the key prefix for prompt token count details.
 	LLMTokenCountPromptDetails = "llm.token_count.prompt_details"
 
 	// LLMTokenCountPromptDetailsCacheWrite is the number of prompt tokens written to cache.
@@ -74,25 +79,25 @@ const (
 	// LLMTokenCountPromptDetailsCacheRead is the number of prompt tokens read from cache.
 	LLMTokenCountPromptDetailsCacheRead = "llm.token_count.prompt_details.cache_read"
 
-	// LLMTokenCountPromptDetailsCacheInput is the number of input tokens in the prompt that were cached.
+	// LLMTokenCountPromptDetailsCacheInput is the number of cached input tokens in the prompt.
 	LLMTokenCountPromptDetailsCacheInput = "llm.token_count.prompt_details.cache_input"
 
-	// LLMTokenCountPromptDetailsAudio is the number of audio tokens in the prompt.
+	// LLMTokenCountPromptDetailsAudio is the number of audio input tokens in the prompt.
 	LLMTokenCountPromptDetailsAudio = "llm.token_count.prompt_details.audio"
 
-	// LLMTokenCountCompletionDetails is the key prefix for additional completion token count details.
+	// LLMTokenCountCompletionDetails is the key prefix for completion token count details.
 	LLMTokenCountCompletionDetails = "llm.token_count.completion_details"
 
-	// LLMTokenCountCompletionDetailsReasoning is the number of tokens used for reasoning steps.
+	// LLMTokenCountCompletionDetailsReasoning is the number of reasoning tokens in the completion.
 	LLMTokenCountCompletionDetailsReasoning = "llm.token_count.completion_details.reasoning"
 
 	// LLMTokenCountCompletionDetailsAudio is the number of audio tokens generated by the model.
 	LLMTokenCountCompletionDetailsAudio = "llm.token_count.completion_details.audio"
 )
 
-// LLM cost attributes. All monetary values are in USD.
+// LLM cost attribute keys. All monetary values are in USD.
 const (
-	// LLMCost is the key prefix for cost information.
+	// LLMCost is the key prefix for LLM cost information.
 	LLMCost = "llm.cost"
 
 	// LLMCostPrompt is the cost of the prompt tokens in USD.
@@ -101,7 +106,7 @@ const (
 	// LLMCostCompletion is the cost of the completion tokens in USD.
 	LLMCostCompletion = "llm.cost.completion"
 
-	// LLMCostTotal is the total cost of the LLM call in USD (prompt + completion).
+	// LLMCostTotal is the total cost of the LLM call in USD.
 	LLMCostTotal = "llm.cost.total"
 
 	// LLMCostInput is the cost of input tokens in USD.
@@ -110,7 +115,7 @@ const (
 	// LLMCostOutput is the cost of output tokens in USD.
 	LLMCostOutput = "llm.cost.completion_details.output"
 
-	// LLMCostCompletionDetailsReasoning is the cost of reasoning steps in the completion in USD.
+	// LLMCostCompletionDetailsReasoning is the cost of reasoning tokens in the completion in USD.
 	LLMCostCompletionDetailsReasoning = "llm.cost.completion_details.reasoning"
 
 	// LLMCostCompletionDetailsAudio is the cost of audio tokens in the completion in USD.
@@ -122,14 +127,14 @@ const (
 	// LLMCostPromptDetailsCacheRead is the cost of prompt tokens read from cache in USD.
 	LLMCostPromptDetailsCacheRead = "llm.cost.prompt_details.cache_read"
 
-	// LLMCostPromptDetailsCacheInput is the cost of input tokens in the prompt that were cached in USD.
+	// LLMCostPromptDetailsCacheInput is the cost of cached input tokens in the prompt in USD.
 	LLMCostPromptDetailsCacheInput = "llm.cost.prompt_details.cache_input"
 
 	// LLMCostPromptDetailsAudio is the cost of audio tokens in the prompt in USD.
 	LLMCostPromptDetailsAudio = "llm.cost.prompt_details.audio"
 )
 
-// LLM prompt template attributes.
+// LLM prompt template attribute keys.
 const (
 	// PromptTemplateVariables is the JSON representation of variables used in the prompt template.
 	PromptTemplateVariables = "llm.prompt_template.variables"
@@ -141,78 +146,78 @@ const (
 	PromptTemplateVersion = "llm.prompt_template.version"
 )
 
-// Message span attributes (for individual messages within LLM input/output).
+// Message attribute keys (for individual messages within LLM input/output lists).
 const (
-	// MessageRole is the role that the LLM assumes the message is from.
+	// MessageRole is the role of the entity in a message (e.g. "user", "system", "assistant").
 	MessageRole = "message.role"
 
-	// MessageContent is the content of the message.
+	// MessageContent is the text content of a message.
 	MessageContent = "message.content"
 
-	// MessageContents is the array of content objects for the message.
+	// MessageContents is the array of content objects for a message (multimodal).
 	MessageContents = "message.contents"
 
-	// MessageName is the name associated with the message (used for role 'function').
+	// MessageName is the name of the function or tool that produced a tool/function role message.
 	MessageName = "message.name"
 
 	// MessageFunctionCallName is the name of the function called by the LLM.
 	MessageFunctionCallName = "message.function_call_name"
 
-	// MessageFunctionCallArgumentsJSON is the arguments of the function call as a JSON string.
+	// MessageFunctionCallArgumentsJSON is the function call arguments as a JSON string.
 	MessageFunctionCallArgumentsJSON = "message.function_call_arguments_json"
 
 	// MessageToolCalls is the list of tool calls generated by the model.
 	MessageToolCalls = "message.tool_calls"
 
-	// MessageToolCallID is the id of the tool call on a "tool" role message.
+	// MessageToolCallID is the tool call result identifier corresponding to [ToolCallID].
 	MessageToolCallID = "message.tool_call_id"
 )
 
-// MessageContent span attributes (for individual content items within a message).
+// MessageContent attribute keys (for individual content items within a message).
 const (
-	// MessageContentType is the type of content (e.g. "text", "image").
+	// MessageContentType is the type of a content item (e.g. "text", "image").
 	MessageContentType = "message_content.type"
 
-	// MessageContentText is the text content of a message.
+	// MessageContentText is the text content of a content item.
 	MessageContentText = "message_content.text"
 
-	// MessageContentImage is the image content of a message.
+	// MessageContentImage is the image content of a content item.
 	MessageContentImage = "message_content.image"
 )
 
-// ToolCall span attributes.
+// ToolCall attribute keys.
 const (
-	// ToolCallFunctionName is the name of the function called via a tool call.
+	// ToolCallFunctionName is the name of the function invoked by a tool call.
 	ToolCallFunctionName = "tool_call.function.name"
 
-	// ToolCallFunctionArgumentsJSON is the arguments of the tool call function as a JSON string.
+	// ToolCallFunctionArgumentsJSON is the function arguments as a JSON string.
 	ToolCallFunctionArgumentsJSON = "tool_call.function.arguments"
 
-	// ToolCallID is the identifier of the tool call.
+	// ToolCallID is the unique identifier for a tool call.
 	ToolCallID = "tool_call.id"
 )
 
-// Image span attributes.
+// Image attribute keys.
 const (
 	// ImageURL is the HTTP or base64 URL of an image.
 	ImageURL = "image.url"
 )
 
-// Audio span attributes.
+// Audio attribute keys.
 const (
 	// AudioURL is the URL of an audio file.
 	AudioURL = "audio.url"
 
-	// AudioMimeType is the MIME type of the audio content.
+	// AudioMimeType is the MIME type of the audio file.
 	AudioMimeType = "audio.mime_type"
 
-	// AudioTranscript is the audio transcript as text.
+	// AudioTranscript is the transcript of the audio file.
 	AudioTranscript = "audio.transcript"
 )
 
-// Document span attributes.
+// Document attribute keys.
 const (
-	// DocumentID is the identifier of a document.
+	// DocumentID is the unique identifier of a document.
 	DocumentID = "document.id"
 
 	// DocumentContent is the content of a document.
@@ -225,28 +230,31 @@ const (
 	DocumentMetadata = "document.metadata"
 )
 
-// Embedding span attributes.
+// Embedding attribute keys.
 const (
-	// EmbeddingEmbeddings is the list root for embeddings.
+	// EmbeddingEmbeddings is the list root for embedding objects.
 	EmbeddingEmbeddings = "embedding.embeddings"
 
 	// EmbeddingText is the text that was embedded to create the vector.
 	EmbeddingText = "embedding.text"
 
-	// EmbeddingModelName is the name of the model used to create the embedding vector.
+	// EmbeddingModelName is the name of the embedding model.
 	EmbeddingModelName = "embedding.model_name"
 
-	// EmbeddingVector is the embedding vector.
+	// EmbeddingVector is the embedding vector (list of floats).
 	EmbeddingVector = "embedding.vector"
+
+	// EmbeddingInvocationParameters is the JSON string of parameters sent to the embedding model.
+	EmbeddingInvocationParameters = "embedding.invocation_parameters"
 )
 
-// Retrieval span attributes.
+// Retrieval attribute keys.
 const (
 	// RetrievalDocuments is the list of retrieved documents.
 	RetrievalDocuments = "retrieval.documents"
 )
 
-// Reranker span attributes.
+// Reranker attribute keys.
 const (
 	// RerankerInputDocuments is the list of documents used as input to the reranker.
 	RerankerInputDocuments = "reranker.input_documents"
@@ -264,7 +272,7 @@ const (
 	RerankerTopK = "reranker.top_k"
 )
 
-// Tool span attributes.
+// Tool attribute keys.
 const (
 	// ToolName is the name of a tool.
 	ToolName = "tool.name"
@@ -272,28 +280,28 @@ const (
 	// ToolDescription is the description of a tool.
 	ToolDescription = "tool.description"
 
-	// ToolParameters is the parameters of the tool as a JSON string.
+	// ToolParameters is the parameters definition for invoking the tool as a JSON string.
 	ToolParameters = "tool.parameters"
 
-	// ToolJSONSchema is the JSON schema of a tool input (recommended to use OpenAI tool calling format).
+	// ToolJSONSchema is the JSON schema of the tool input.
 	ToolJSONSchema = "tool.json_schema"
 
-	// ToolID is the identifier for the result of the tool call.
+	// ToolID is the identifier for the result of the tool call (corresponding to [ToolCallID]).
 	ToolID = "tool.id"
 )
 
-// Session and user span attributes.
+// Session and user attribute keys.
 const (
-	// SessionID is the session identifier used to correlate spans in a single session.
+	// SessionID is the unique session identifier used to correlate spans in a session.
 	SessionID = "session.id"
 
-	// UserID is the user identifier used to correlate spans for a single user.
+	// UserID is the unique user identifier used to correlate spans for a user.
 	UserID = "user.id"
 )
 
-// Prompt span attributes.
+// Prompt attribute keys.
 const (
-	// PromptVendor is the vendor or origin of the prompt.
+	// PromptVendor is the vendor or origin of the prompt (e.g. "langsmith", "portkey").
 	PromptVendor = "prompt.vendor"
 
 	// PromptID is a vendor-specific identifier for the prompt.
@@ -303,13 +311,13 @@ const (
 	PromptURL = "prompt.url"
 )
 
-// Agent span attributes.
+// Agent attribute keys.
 const (
 	// AgentName is the name of the agent.
 	AgentName = "agent.name"
 )
 
-// Graph span attributes.
+// Graph attribute keys.
 const (
 	// GraphNodeID is the id of the node in the execution graph.
 	GraphNodeID = "graph.node.id"
@@ -317,102 +325,40 @@ const (
 	// GraphNodeName is the human-readable name of the node in the execution graph.
 	GraphNodeName = "graph.node.name"
 
-	// GraphNodeParentID is the id of the parent node in the execution graph.
+	// GraphNodeParentID is the id of the parent node; empty implies root.
 	GraphNodeParentID = "graph.node.parent_id"
 )
 
-// Generic span attributes.
+// Generic attribute keys.
 const (
-	// Metadata stores user-defined key-value pairs for a span.
+	// Metadata stores user-defined key-value pairs for a span as a JSON string.
 	Metadata = "metadata"
 
 	// TagTags is the list of tags associated with a span.
 	TagTags = "tag.tags"
 )
 
-// OpenInference span kind attribute.
+// OpenInference attribute keys.
 const (
 	// OpenInferenceSpanKindKey is the attribute key for the OpenInference span kind.
+	// Use [OpenInferenceSpanKind] values for well-known kinds.
 	OpenInferenceSpanKindKey = "openinference.span.kind"
-)
 
-// Resource attributes.
-const (
-	// ProjectName is the project name used to group traces for OpenInference compatible services.
+	// ProjectName is the project name used to group traces for OpenInference-compatible services.
 	ProjectName = "openinference.project.name"
 )
 
-// OpenInferenceSpanKind represents the kind of an OpenInference span.
-type OpenInferenceSpanKind string
-
+// Exception attribute keys (reserved by the OpenInference spec).
 const (
-	// SpanKindLLM identifies a span that calls a large language model.
-	SpanKindLLM OpenInferenceSpanKind = "LLM"
+	// ExceptionEscaped indicates whether the exception escaped the span's scope.
+	ExceptionEscaped = "exception.escaped"
 
-	// SpanKindChain identifies a span that chains multiple calls together.
-	SpanKindChain OpenInferenceSpanKind = "CHAIN"
+	// ExceptionMessage is the detailed message describing the exception.
+	ExceptionMessage = "exception.message"
 
-	// SpanKindTool identifies a span that calls a tool.
-	SpanKindTool OpenInferenceSpanKind = "TOOL"
+	// ExceptionStacktrace is the stack trace of the exception.
+	ExceptionStacktrace = "exception.stacktrace"
 
-	// SpanKindRetriever identifies a span that retrieves documents.
-	SpanKindRetriever OpenInferenceSpanKind = "RETRIEVER"
-
-	// SpanKindReranker identifies a span that reranks documents.
-	SpanKindReranker OpenInferenceSpanKind = "RERANKER"
-
-	// SpanKindEmbedding identifies a span that creates embeddings.
-	SpanKindEmbedding OpenInferenceSpanKind = "EMBEDDING"
-
-	// SpanKindAgent identifies a span that runs an agent.
-	SpanKindAgent OpenInferenceSpanKind = "AGENT"
-
-	// SpanKindGuardrail identifies a span that applies a guardrail.
-	SpanKindGuardrail OpenInferenceSpanKind = "GUARDRAIL"
-
-	// SpanKindEvaluator identifies a span that evaluates a result.
-	SpanKindEvaluator OpenInferenceSpanKind = "EVALUATOR"
-)
-
-// MimeType represents common MIME types used in OpenInference.
-type MimeType string
-
-const (
-	// MimeTypeText is the plain text MIME type.
-	MimeTypeText MimeType = "text/plain"
-
-	// MimeTypeJSON is the JSON MIME type.
-	MimeTypeJSON MimeType = "application/json"
-
-	// MimeTypeAudioWAV is the WAV audio MIME type.
-	MimeTypeAudioWAV MimeType = "audio/wav"
-)
-
-// LLMSystem represents the AI product as identified by the client or server.
-type LLMSystem string
-
-const (
-	LLMSystemOpenAI    LLMSystem = "openai"
-	LLMSystemAnthropic LLMSystem = "anthropic"
-	LLMSystemMistralAI LLMSystem = "mistralai"
-	LLMSystemCohere    LLMSystem = "cohere"
-	LLMSystemVertexAI  LLMSystem = "vertexai"
-	LLMSystemAI21      LLMSystem = "ai21"
-	LLMSystemMeta      LLMSystem = "meta"
-	LLMSystemAmazon    LLMSystem = "amazon"
-)
-
-// LLMProvider represents the provider of the LLM inferences.
-type LLMProvider string
-
-const (
-	LLMProviderOpenAI    LLMProvider = "openai"
-	LLMProviderAnthropic LLMProvider = "anthropic"
-	LLMProviderMistralAI LLMProvider = "mistralai"
-	LLMProviderCohere    LLMProvider = "cohere"
-	LLMProviderGoogle    LLMProvider = "google"
-	LLMProviderAWS       LLMProvider = "aws"
-	LLMProviderAzure     LLMProvider = "azure"
-	LLMProviderXAI       LLMProvider = "xai"
-	LLMProviderDeepSeek  LLMProvider = "deepseek"
+	// ExceptionType is the type of exception that was thrown.
+	ExceptionType = "exception.type"
 )
