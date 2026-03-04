@@ -133,6 +133,7 @@ func TestMessageContentAttributes(t *testing.T) {
 		{"MessageContentType", semconv.MessageContentType, "message_content.type"},
 		{"MessageContentText", semconv.MessageContentText, "message_content.text"},
 		{"MessageContentImage", semconv.MessageContentImage, "message_content.image"},
+		{"MessageContentAudio", semconv.MessageContentAudio, "message_content.audio"},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -421,10 +422,10 @@ func TestLLMProvider(t *testing.T) {
 
 func TestInputMessageAttribute(t *testing.T) {
 	cases := []struct {
-		name              string
-		index             int
-		suffix            string
-		want              string
+		name   string
+		index  int
+		suffix string
+		want   string
 	}{
 		{"role at 0", 0, "message.role", "llm.input_messages.0.message.role"},
 		{"content at 1", 1, "message.content", "llm.input_messages.1.message.content"},
@@ -459,10 +460,10 @@ func TestOutputMessageAttribute(t *testing.T) {
 
 func TestInputMessageContentAttribute(t *testing.T) {
 	cases := []struct {
-		name                    string
+		name                       string
 		messageIndex, contentIndex int
-		suffix                  string
-		want                    string
+		suffix                     string
+		want                       string
 	}{
 		{"text at msg0 content1", 0, 1, "text", "llm.input_messages.0.message.contents.1.message_content.text"},
 		{"type at msg1 content0", 1, 0, "type", "llm.input_messages.1.message.contents.0.message_content.type"},
@@ -477,12 +478,32 @@ func TestInputMessageContentAttribute(t *testing.T) {
 	}
 }
 
-func TestOutputMessageToolCallAttribute(t *testing.T) {
+func TestOutputMessageContentAttribute(t *testing.T) {
 	cases := []struct {
 		name                       string
-		messageIndex, toolCallIndex int
+		messageIndex, contentIndex int
 		suffix                     string
 		want                       string
+	}{
+		{"text at msg0 content0", 0, 0, "text", "llm.output_messages.0.message.contents.0.message_content.text"},
+		{"type at msg1 content2", 1, 2, "type", "llm.output_messages.1.message.contents.2.message_content.type"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			got := semconv.OutputMessageContentAttribute(c.messageIndex, c.contentIndex, c.suffix)
+			if got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestOutputMessageToolCallAttribute(t *testing.T) {
+	cases := []struct {
+		name                        string
+		messageIndex, toolCallIndex int
+		suffix                      string
+		want                        string
 	}{
 		{"function.name at msg0 call0", 0, 0, "tool_call.function.name", "llm.output_messages.0.message.tool_calls.0.tool_call.function.name"},
 		{"id at msg1 call2", 1, 2, "tool_call.id", "llm.output_messages.1.message.tool_calls.2.tool_call.id"},
@@ -494,5 +515,192 @@ func TestOutputMessageToolCallAttribute(t *testing.T) {
 				t.Errorf("got %q, want %q", got, c.want)
 			}
 		})
+	}
+}
+
+func TestLLMPromptAttribute(t *testing.T) {
+	cases := []struct {
+		name  string
+		index int
+		want  string
+	}{
+		{"prompt text at 0", 0, "llm.prompts.0.prompt.text"},
+		{"prompt text at 1", 1, "llm.prompts.1.prompt.text"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.LLMPromptAttribute(c.index); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestLLMChoiceAttribute(t *testing.T) {
+	cases := []struct {
+		name  string
+		index int
+		want  string
+	}{
+		{"choice text at 0", 0, "llm.choices.0.completion.text"},
+		{"choice text at 2", 2, "llm.choices.2.completion.text"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.LLMChoiceAttribute(c.index); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestLLMToolAttribute(t *testing.T) {
+	cases := []struct {
+		name   string
+		index  int
+		suffix string
+		want   string
+	}{
+		{"json_schema at 0", 0, "tool.json_schema", "llm.tools.0.tool.json_schema"},
+		{"json_schema at 1", 1, "tool.json_schema", "llm.tools.1.tool.json_schema"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.LLMToolAttribute(c.index, c.suffix); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestEmbeddingAttribute(t *testing.T) {
+	cases := []struct {
+		name   string
+		index  int
+		suffix string
+		want   string
+	}{
+		{"text at 0", 0, "embedding.text", "embedding.embeddings.0.embedding.text"},
+		{"vector at 1", 1, "embedding.vector", "embedding.embeddings.1.embedding.vector"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.EmbeddingAttribute(c.index, c.suffix); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestRetrievalDocumentAttribute(t *testing.T) {
+	cases := []struct {
+		name   string
+		index  int
+		suffix string
+		want   string
+	}{
+		{"content at 0", 0, "document.content", "retrieval.documents.0.document.content"},
+		{"score at 1", 1, "document.score", "retrieval.documents.1.document.score"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.RetrievalDocumentAttribute(c.index, c.suffix); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestRerankerInputDocumentAttribute(t *testing.T) {
+	cases := []struct {
+		name   string
+		index  int
+		suffix string
+		want   string
+	}{
+		{"id at 0", 0, "document.id", "reranker.input_documents.0.document.id"},
+		{"score at 2", 2, "document.score", "reranker.input_documents.2.document.score"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.RerankerInputDocumentAttribute(c.index, c.suffix); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+func TestRerankerOutputDocumentAttribute(t *testing.T) {
+	cases := []struct {
+		name   string
+		index  int
+		suffix string
+		want   string
+	}{
+		{"id at 0", 0, "document.id", "reranker.output_documents.0.document.id"},
+		{"content at 1", 1, "document.content", "reranker.output_documents.1.document.content"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := semconv.RerankerOutputDocumentAttribute(c.index, c.suffix); got != c.want {
+				t.Errorf("got %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
+// --- Legacy completions sub-field constants ---
+
+func TestLegacyCompletionsSubfields(t *testing.T) {
+	cases := []struct{ name, got, want string }{
+		{"PromptText", semconv.PromptText, "prompt.text"},
+		{"CompletionText", semconv.CompletionText, "completion.text"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.got != c.want {
+				t.Errorf("got %q, want %q", c.got, c.want)
+			}
+		})
+	}
+}
+
+// --- Configuration constants ---
+
+func TestConfigEnvVarNames(t *testing.T) {
+	cases := []struct{ name, got, want string }{
+		{"EnvHideLLMInvocationParameters", semconv.EnvHideLLMInvocationParameters, "OPENINFERENCE_HIDE_LLM_INVOCATION_PARAMETERS"},
+		{"EnvHideInputs", semconv.EnvHideInputs, "OPENINFERENCE_HIDE_INPUTS"},
+		{"EnvHideOutputs", semconv.EnvHideOutputs, "OPENINFERENCE_HIDE_OUTPUTS"},
+		{"EnvHideInputMessages", semconv.EnvHideInputMessages, "OPENINFERENCE_HIDE_INPUT_MESSAGES"},
+		{"EnvHideOutputMessages", semconv.EnvHideOutputMessages, "OPENINFERENCE_HIDE_OUTPUT_MESSAGES"},
+		{"EnvHideInputImages", semconv.EnvHideInputImages, "OPENINFERENCE_HIDE_INPUT_IMAGES"},
+		{"EnvHideInputText", semconv.EnvHideInputText, "OPENINFERENCE_HIDE_INPUT_TEXT"},
+		{"EnvHideOutputText", semconv.EnvHideOutputText, "OPENINFERENCE_HIDE_OUTPUT_TEXT"},
+		{"EnvHidePrompts", semconv.EnvHidePrompts, "OPENINFERENCE_HIDE_PROMPTS"},
+		{"EnvHideChoices", semconv.EnvHideChoices, "OPENINFERENCE_HIDE_CHOICES"},
+		{"EnvHideEmbeddingsVectors", semconv.EnvHideEmbeddingsVectors, "OPENINFERENCE_HIDE_EMBEDDINGS_VECTORS"},
+		{"EnvHideEmbeddingVectors", semconv.EnvHideEmbeddingVectors, "OPENINFERENCE_HIDE_EMBEDDING_VECTORS"},
+		{"EnvHideEmbeddingsText", semconv.EnvHideEmbeddingsText, "OPENINFERENCE_HIDE_EMBEDDINGS_TEXT"},
+		{"EnvBase64ImageMaxLength", semconv.EnvBase64ImageMaxLength, "OPENINFERENCE_BASE64_IMAGE_MAX_LENGTH"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.got != c.want {
+				t.Errorf("got %q, want %q", c.got, c.want)
+			}
+		})
+	}
+}
+
+func TestRedactedValue(t *testing.T) {
+	if semconv.RedactedValue != "__REDACTED__" {
+		t.Errorf("got %q, want %q", semconv.RedactedValue, "__REDACTED__")
+	}
+}
+
+func TestDefaultBase64ImageMaxLength(t *testing.T) {
+	if semconv.DefaultBase64ImageMaxLength != 32_000 {
+		t.Errorf("got %d, want 32000", semconv.DefaultBase64ImageMaxLength)
 	}
 }

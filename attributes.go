@@ -59,6 +59,22 @@ const (
 	LLMTools = "llm.tools"
 )
 
+// Legacy completions API sub-field attribute keys.
+//
+// When serialising prompts and choices to span attributes, index them as:
+//
+//	llm.prompts.<N>.prompt.text
+//	llm.choices.<N>.completion.text
+//
+// See [LLMPromptAttribute] and [LLMChoiceAttribute] for convenience helpers.
+const (
+	// PromptText is the text sub-field inside an indexed llm.prompts entry.
+	PromptText = "prompt.text"
+
+	// CompletionText is the text sub-field inside an indexed llm.choices entry.
+	CompletionText = "completion.text"
+)
+
 // LLM token count attribute keys.
 const (
 	// LLMTokenCountPrompt is the number of tokens in the prompt.
@@ -175,7 +191,7 @@ const (
 
 // MessageContent attribute keys (for individual content items within a message).
 const (
-	// MessageContentType is the type of a content item (e.g. "text", "image").
+	// MessageContentType is the type of a content item (e.g. "text", "image", "audio").
 	MessageContentType = "message_content.type"
 
 	// MessageContentText is the text content of a content item.
@@ -183,6 +199,9 @@ const (
 
 	// MessageContentImage is the image content of a content item.
 	MessageContentImage = "message_content.image"
+
+	// MessageContentAudio is the audio content of a content item.
+	MessageContentAudio = "message_content.audio"
 )
 
 // ToolCall attribute keys.
