@@ -18,7 +18,7 @@ Go packages should be organized by semantic convention namespace (e.g., `http`, 
 
 ## Prerequisites
 
-- Go 1.21 or later (check `go.mod` for the exact minimum version once initialized)
+- Go 1.21 or later (this project targets Go 1.21+ as the minimum supported version)
 - Standard Go toolchain (`go build`, `go test`, `go vet`)
 
 ## Build & Test
