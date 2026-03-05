@@ -1,22 +1,17 @@
 version: "2"
 
 linters:
-  default: none
+  default: standard
   enable:
     - bodyclose
     - dogsled
-    - errcheck
     - gocritic
     - godot
-    - govet
-    - ineffassign
     - misspell
     - noctx
     - prealloc
-    - staticcheck
     - unconvert
     - unparam
-    - unused
     - whitespace
 
 linters-settings:
