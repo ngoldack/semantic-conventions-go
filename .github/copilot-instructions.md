@@ -71,3 +71,13 @@ Before opening a pull request, ensure:
 - Use Go modules (`go mod tidy` after adding or removing dependencies).
 - Do not vendor dependencies (`vendor/` is not committed).
 - Pin dependency versions in `go.mod`/`go.sum`.
+
+## Commit Messages
+
+- Use conventional commit messages (e.g., `feat:`, `fix:`, `docs:`, `chore:`).
+- Include a brief description of the change and reference any relevant issues (e.g., `fix: correct attribute key for HTTP method (fixes #123)`).
+- For larger changes, consider including a more detailed description in the commit body.
+- Avoid including implementation details in the commit message; focus on the "what" and "why" rather than the "how".
+- Use the present tense and imperative mood (e.g., "Add new attribute keys" instead of "Added new attribute keys").
+- If the change is a breaking change, include `BREAKING CHANGE:` in the commit message body with a description of the breaking change and any necessary migration steps.
+- Follow the conventional commit format to facilitate automated changelog generation and versioning.
