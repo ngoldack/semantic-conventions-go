@@ -7,17 +7,19 @@ import "fmt"
 // InputMessageAttribute returns the flattened attribute key for a field within
 // an indexed input message, e.g.
 //
-//	InputMessageAttribute(0, MessageRoleKey) → "llm.input_messages.0.message.role"
+//	InputMessageAttribute(0, MessageRole) → "llm.input_messages.0.message.role"
 func InputMessageAttribute(index int, suffix string) string {
 	return fmt.Sprintf("%s.%d.%s", LLMInputMessages, index, suffix)
 }
 
 // InputMessageContentAttribute returns the flattened attribute key for a
-// content item within an indexed input message, e.g.
+// content item within an indexed input message. Pass one of the exported
+// MessageContent* constants as suffix, e.g.
 //
-//	InputMessageContentAttribute(0, 1, "text") → "llm.input_messages.0.message.contents.1.message_content.text"
+//	InputMessageContentAttribute(0, 1, MessageContentText)
+//	→ "llm.input_messages.0.message.contents.1.message_content.text"
 func InputMessageContentAttribute(messageIndex, contentIndex int, suffix string) string {
-	return fmt.Sprintf("%s.%d.message.contents.%d.message_content.%s",
+	return fmt.Sprintf("%s.%d.message.contents.%d.%s",
 		LLMInputMessages, messageIndex, contentIndex, suffix)
 }
 
@@ -32,11 +34,13 @@ func OutputMessageAttribute(index int, suffix string) string {
 }
 
 // OutputMessageContentAttribute returns the flattened attribute key for a
-// content item within an indexed output message, e.g.
+// content item within an indexed output message. Pass one of the exported
+// MessageContent* constants as suffix, e.g.
 //
-//	OutputMessageContentAttribute(0, 0, "text") → "llm.output_messages.0.message.contents.0.message_content.text"
+//	OutputMessageContentAttribute(0, 0, MessageContentText)
+//	→ "llm.output_messages.0.message.contents.0.message_content.text"
 func OutputMessageContentAttribute(messageIndex, contentIndex int, suffix string) string {
-	return fmt.Sprintf("%s.%d.message.contents.%d.message_content.%s",
+	return fmt.Sprintf("%s.%d.message.contents.%d.%s",
 		LLMOutputMessages, messageIndex, contentIndex, suffix)
 }
 

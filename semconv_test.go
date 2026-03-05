@@ -423,12 +423,12 @@ func TestLLMProvider(t *testing.T) {
 func TestInputMessageAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"role at 0", 0, "message.role", "llm.input_messages.0.message.role"},
-		{"content at 1", 1, "message.content", "llm.input_messages.1.message.content"},
+		{"role at 0", "message.role", "llm.input_messages.0.message.role", 0},
+		{"content at 1", "message.content", "llm.input_messages.1.message.content", 1},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -442,12 +442,12 @@ func TestInputMessageAttribute(t *testing.T) {
 func TestOutputMessageAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"role at 0", 0, "message.role", "llm.output_messages.0.message.role"},
-		{"content at 2", 2, "message.content", "llm.output_messages.2.message.content"},
+		{"role at 0", "message.role", "llm.output_messages.0.message.role", 0},
+		{"content at 2", "message.content", "llm.output_messages.2.message.content", 2},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -460,13 +460,14 @@ func TestOutputMessageAttribute(t *testing.T) {
 
 func TestInputMessageContentAttribute(t *testing.T) {
 	cases := []struct {
-		name                       string
-		messageIndex, contentIndex int
-		suffix                     string
-		want                       string
+		name         string
+		suffix       string
+		want         string
+		messageIndex int
+		contentIndex int
 	}{
-		{"text at msg0 content1", 0, 1, "text", "llm.input_messages.0.message.contents.1.message_content.text"},
-		{"type at msg1 content0", 1, 0, "type", "llm.input_messages.1.message.contents.0.message_content.type"},
+		{"text at msg0 content1", semconv.MessageContentText, "llm.input_messages.0.message.contents.1.message_content.text", 0, 1},
+		{"type at msg1 content0", semconv.MessageContentTypeKey, "llm.input_messages.1.message.contents.0.message_content.type", 1, 0},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -480,13 +481,14 @@ func TestInputMessageContentAttribute(t *testing.T) {
 
 func TestOutputMessageContentAttribute(t *testing.T) {
 	cases := []struct {
-		name                       string
-		messageIndex, contentIndex int
-		suffix                     string
-		want                       string
+		name         string
+		suffix       string
+		want         string
+		messageIndex int
+		contentIndex int
 	}{
-		{"text at msg0 content0", 0, 0, "text", "llm.output_messages.0.message.contents.0.message_content.text"},
-		{"type at msg1 content2", 1, 2, "type", "llm.output_messages.1.message.contents.2.message_content.type"},
+		{"text at msg0 content0", semconv.MessageContentText, "llm.output_messages.0.message.contents.0.message_content.text", 0, 0},
+		{"type at msg1 content2", semconv.MessageContentTypeKey, "llm.output_messages.1.message.contents.2.message_content.type", 1, 2},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -500,13 +502,14 @@ func TestOutputMessageContentAttribute(t *testing.T) {
 
 func TestOutputMessageToolCallAttribute(t *testing.T) {
 	cases := []struct {
-		name                        string
-		messageIndex, toolCallIndex int
-		suffix                      string
-		want                        string
+		name         string
+		suffix       string
+		want         string
+		messageIndex int
+		toolCallIndex int
 	}{
-		{"function.name at msg0 call0", 0, 0, "tool_call.function.name", "llm.output_messages.0.message.tool_calls.0.tool_call.function.name"},
-		{"id at msg1 call2", 1, 2, "tool_call.id", "llm.output_messages.1.message.tool_calls.2.tool_call.id"},
+		{"function.name at msg0 call0", "tool_call.function.name", "llm.output_messages.0.message.tool_calls.0.tool_call.function.name", 0, 0},
+		{"id at msg1 call2", "tool_call.id", "llm.output_messages.1.message.tool_calls.2.tool_call.id", 1, 2},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -521,11 +524,11 @@ func TestOutputMessageToolCallAttribute(t *testing.T) {
 func TestLLMPromptAttribute(t *testing.T) {
 	cases := []struct {
 		name  string
-		index int
 		want  string
+		index int
 	}{
-		{"prompt text at 0", 0, "llm.prompts.0.prompt.text"},
-		{"prompt text at 1", 1, "llm.prompts.1.prompt.text"},
+		{"prompt text at 0", "llm.prompts.0.prompt.text", 0},
+		{"prompt text at 1", "llm.prompts.1.prompt.text", 1},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -539,11 +542,11 @@ func TestLLMPromptAttribute(t *testing.T) {
 func TestLLMChoiceAttribute(t *testing.T) {
 	cases := []struct {
 		name  string
-		index int
 		want  string
+		index int
 	}{
-		{"choice text at 0", 0, "llm.choices.0.completion.text"},
-		{"choice text at 2", 2, "llm.choices.2.completion.text"},
+		{"choice text at 0", "llm.choices.0.completion.text", 0},
+		{"choice text at 2", "llm.choices.2.completion.text", 2},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -557,12 +560,12 @@ func TestLLMChoiceAttribute(t *testing.T) {
 func TestLLMToolAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"json_schema at 0", 0, "tool.json_schema", "llm.tools.0.tool.json_schema"},
-		{"json_schema at 1", 1, "tool.json_schema", "llm.tools.1.tool.json_schema"},
+		{"json_schema at 0", "tool.json_schema", "llm.tools.0.tool.json_schema", 0},
+		{"json_schema at 1", "tool.json_schema", "llm.tools.1.tool.json_schema", 1},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -576,12 +579,12 @@ func TestLLMToolAttribute(t *testing.T) {
 func TestEmbeddingAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"text at 0", 0, "embedding.text", "embedding.embeddings.0.embedding.text"},
-		{"vector at 1", 1, "embedding.vector", "embedding.embeddings.1.embedding.vector"},
+		{"text at 0", "embedding.text", "embedding.embeddings.0.embedding.text", 0},
+		{"vector at 1", "embedding.vector", "embedding.embeddings.1.embedding.vector", 1},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -595,12 +598,12 @@ func TestEmbeddingAttribute(t *testing.T) {
 func TestRetrievalDocumentAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"content at 0", 0, "document.content", "retrieval.documents.0.document.content"},
-		{"score at 1", 1, "document.score", "retrieval.documents.1.document.score"},
+		{"content at 0", "document.content", "retrieval.documents.0.document.content", 0},
+		{"score at 1", "document.score", "retrieval.documents.1.document.score", 1},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -614,12 +617,12 @@ func TestRetrievalDocumentAttribute(t *testing.T) {
 func TestRerankerInputDocumentAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"id at 0", 0, "document.id", "reranker.input_documents.0.document.id"},
-		{"score at 2", 2, "document.score", "reranker.input_documents.2.document.score"},
+		{"id at 0", "document.id", "reranker.input_documents.0.document.id", 0},
+		{"score at 2", "document.score", "reranker.input_documents.2.document.score", 2},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -633,12 +636,12 @@ func TestRerankerInputDocumentAttribute(t *testing.T) {
 func TestRerankerOutputDocumentAttribute(t *testing.T) {
 	cases := []struct {
 		name   string
-		index  int
 		suffix string
 		want   string
+		index  int
 	}{
-		{"id at 0", 0, "document.id", "reranker.output_documents.0.document.id"},
-		{"content at 1", 1, "document.content", "reranker.output_documents.1.document.content"},
+		{"id at 0", "document.id", "reranker.output_documents.0.document.id", 0},
+		{"content at 1", "document.content", "reranker.output_documents.1.document.content", 1},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {

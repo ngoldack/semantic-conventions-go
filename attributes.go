@@ -61,7 +61,7 @@ const (
 
 // Legacy completions API sub-field attribute keys.
 //
-// When serialising prompts and choices to span attributes, index them as:
+// When serializing prompts and choices to span attributes, index them as:
 //
 //	llm.prompts.<N>.prompt.text
 //	llm.choices.<N>.completion.text
