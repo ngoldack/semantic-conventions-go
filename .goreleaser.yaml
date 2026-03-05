@@ -1,0 +1,46 @@
+# GoReleaser configuration for semantic-conventions-go.
+# This is a library project (no binaries). GoReleaser is used for
+# automated GitHub releases and changelog generation on tag pushes.
+version: 2
+
+project_name: semantic-conventions-go
+
+before:
+  hooks:
+    - go mod tidy
+
+# Skip binary builds — this is a library.
+builds:
+  - skip: true
+
+# Skip archive creation — no binaries to archive.
+archives:
+  - formats: []
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "Merge pull request"
+      - "Merge branch"
+  groups:
+    - title: "Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: "Bug Fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: "Others"
+      order: 999
+
+release:
+  github:
+    owner: ngoldack
+    name: semantic-conventions-go
+  draft: false
+  prerelease: auto
+  name_template: "v{{ .Version }}"
