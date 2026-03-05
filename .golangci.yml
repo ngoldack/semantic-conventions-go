@@ -13,12 +13,11 @@ linters:
     - unconvert
     - unparam
     - whitespace
-
-linters-settings:
-  govet:
-    enable-all: true
-  misspell:
-    locale: US
+  settings:
+    govet:
+      enable-all: true
+    misspell:
+      locale: US
 
 issues:
   max-issues-per-linter: 0
