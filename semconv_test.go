@@ -75,8 +75,8 @@ func TestLLMCostAttributes(t *testing.T) {
 		{"LLMCostPrompt", semconv.LLMCostPrompt, "llm.cost.prompt"},
 		{"LLMCostCompletion", semconv.LLMCostCompletion, "llm.cost.completion"},
 		{"LLMCostTotal", semconv.LLMCostTotal, "llm.cost.total"},
-		{"LLMCostInput", semconv.LLMCostInput, "llm.cost.prompt_details.input"},
-		{"LLMCostOutput", semconv.LLMCostOutput, "llm.cost.completion_details.output"},
+		{"LLMCostPromptDetailsInput", semconv.LLMCostPromptDetailsInput, "llm.cost.prompt_details.input"},
+		{"LLMCostCompletionDetailsOutput", semconv.LLMCostCompletionDetailsOutput, "llm.cost.completion_details.output"},
 		{"LLMCostCompletionDetailsReasoning", semconv.LLMCostCompletionDetailsReasoning, "llm.cost.completion_details.reasoning"},
 		{"LLMCostCompletionDetailsAudio", semconv.LLMCostCompletionDetailsAudio, "llm.cost.completion_details.audio"},
 		{"LLMCostPromptDetailsCacheWrite", semconv.LLMCostPromptDetailsCacheWrite, "llm.cost.prompt_details.cache_write"},
@@ -110,7 +110,7 @@ func TestPromptTemplateAttributes(t *testing.T) {
 
 func TestMessageAttributes(t *testing.T) {
 	cases := []struct{ name, got, want string }{
-		{"MessageRole", semconv.MessageRole, "message.role"},
+		{"MessageRoleKey", semconv.MessageRoleKey, "message.role"},
 		{"MessageContent", semconv.MessageContent, "message.content"},
 		{"MessageContents", semconv.MessageContents, "message.contents"},
 		{"MessageName", semconv.MessageName, "message.name"},
@@ -130,7 +130,7 @@ func TestMessageAttributes(t *testing.T) {
 
 func TestMessageContentAttributes(t *testing.T) {
 	cases := []struct{ name, got, want string }{
-		{"MessageContentType", semconv.MessageContentType, "message_content.type"},
+		{"MessageContentTypeKey", semconv.MessageContentTypeKey, "message_content.type"},
 		{"MessageContentText", semconv.MessageContentText, "message_content.text"},
 		{"MessageContentImage", semconv.MessageContentImage, "message_content.image"},
 		{"MessageContentAudio", semconv.MessageContentAudio, "message_content.audio"},
@@ -702,5 +702,45 @@ func TestRedactedValue(t *testing.T) {
 func TestDefaultBase64ImageMaxLength(t *testing.T) {
 	if semconv.DefaultBase64ImageMaxLength != 32_000 {
 		t.Errorf("got %d, want 32000", semconv.DefaultBase64ImageMaxLength)
+	}
+}
+
+func TestMessageRoleValues(t *testing.T) {
+	cases := []struct {
+		name string
+		got  semconv.MessageRole
+		want string
+	}{
+		{"MessageRoleUser", semconv.MessageRoleUser, "user"},
+		{"MessageRoleAssistant", semconv.MessageRoleAssistant, "assistant"},
+		{"MessageRoleSystem", semconv.MessageRoleSystem, "system"},
+		{"MessageRoleTool", semconv.MessageRoleTool, "tool"},
+		{"MessageRoleFunction", semconv.MessageRoleFunction, "function"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.got.String() != c.want {
+				t.Errorf("got %q, want %q", c.got, c.want)
+			}
+		})
+	}
+}
+
+func TestMessageContentTypeValues(t *testing.T) {
+	cases := []struct {
+		name string
+		got  semconv.MessageContentType
+		want string
+	}{
+		{"MessageContentTypeText", semconv.MessageContentTypeText, "text"},
+		{"MessageContentTypeImage", semconv.MessageContentTypeImage, "image"},
+		{"MessageContentTypeAudio", semconv.MessageContentTypeAudio, "audio"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.got.String() != c.want {
+				t.Errorf("got %q, want %q", c.got, c.want)
+			}
+		})
 	}
 }

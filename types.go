@@ -94,3 +94,31 @@ const (
 	LLMProviderXAI       LLMProvider = "xai"
 	LLMProviderDeepSeek  LLMProvider = "deepseek"
 )
+
+// MessageRole represents the role of an entity in a conversation message.
+// Used as the value for the [MessageRoleKey] attribute.
+type MessageRole string
+
+// String returns the string value of the message role.
+func (r MessageRole) String() string { return string(r) }
+
+const (
+	MessageRoleUser      MessageRole = "user"
+	MessageRoleAssistant MessageRole = "assistant"
+	MessageRoleSystem    MessageRole = "system"
+	MessageRoleTool      MessageRole = "tool"
+	MessageRoleFunction  MessageRole = "function"
+)
+
+// MessageContentType represents the type of content in a multimodal message.
+// Used as the value for the [MessageContentTypeKey] attribute.
+type MessageContentType string
+
+// String returns the string value of the message content type.
+func (c MessageContentType) String() string { return string(c) }
+
+const (
+	MessageContentTypeText  MessageContentType = "text"
+	MessageContentTypeImage MessageContentType = "image"
+	MessageContentTypeAudio MessageContentType = "audio"
+)

@@ -7,7 +7,7 @@ import "fmt"
 // InputMessageAttribute returns the flattened attribute key for a field within
 // an indexed input message, e.g.
 //
-//	InputMessageAttribute(0, MessageRole) → "llm.input_messages.0.message.role"
+//	InputMessageAttribute(0, MessageRoleKey) → "llm.input_messages.0.message.role"
 func InputMessageAttribute(index int, suffix string) string {
 	return fmt.Sprintf("%s.%d.%s", LLMInputMessages, index, suffix)
 }

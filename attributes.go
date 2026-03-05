@@ -125,11 +125,11 @@ const (
 	// LLMCostTotal is the total cost of the LLM call in USD.
 	LLMCostTotal = "llm.cost.total"
 
-	// LLMCostInput is the cost of input tokens in USD.
-	LLMCostInput = "llm.cost.prompt_details.input"
+	// LLMCostPromptDetailsInput is the cost of input tokens in the prompt in USD.
+	LLMCostPromptDetailsInput = "llm.cost.prompt_details.input"
 
-	// LLMCostOutput is the cost of output tokens in USD.
-	LLMCostOutput = "llm.cost.completion_details.output"
+	// LLMCostCompletionDetailsOutput is the cost of output tokens in the completion in USD.
+	LLMCostCompletionDetailsOutput = "llm.cost.completion_details.output"
 
 	// LLMCostCompletionDetailsReasoning is the cost of reasoning tokens in the completion in USD.
 	LLMCostCompletionDetailsReasoning = "llm.cost.completion_details.reasoning"
@@ -164,8 +164,8 @@ const (
 
 // Message attribute keys (for individual messages within LLM input/output lists).
 const (
-	// MessageRole is the role of the entity in a message (e.g. "user", "system", "assistant").
-	MessageRole = "message.role"
+	// MessageRoleKey is the role of the entity in a message (e.g. "user", "system", "assistant").
+	MessageRoleKey = "message.role"
 
 	// MessageContent is the text content of a message.
 	MessageContent = "message.content"
@@ -191,8 +191,8 @@ const (
 
 // MessageContent attribute keys (for individual content items within a message).
 const (
-	// MessageContentType is the type of a content item (e.g. "text", "image", "audio").
-	MessageContentType = "message_content.type"
+	// MessageContentTypeKey is the type of a content item (e.g. "text", "image", "audio").
+	MessageContentTypeKey = "message_content.type"
 
 	// MessageContentText is the text content of a content item.
 	MessageContentText = "message_content.text"
